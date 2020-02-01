@@ -42,13 +42,63 @@ class Cube(object):
             pygame.draw.circle(surface, (0,0,0), circleMiddle1, radius)
             
 
+#take all the cube objects of the snake and put them together
 class Snake(object):
+    #array to hold all cube objects of the snake
+    bodyCubes = []
+    #keep track of where and which direction every turn is at for the tail of the snake to follow
+    turns = {}
+
+    #start the snake 4 cubes big facing right
     def __init__(self, color, position):
-        pass
-
+        self.color = color
+        self.head = Cube(position)
+        self.body.append(self.head)
+        self.addCube()
+        self.addCube()
+        self.addCube()
+        self.direcX = 0
+        self.direcY = 1
+        
     def move(self):
-        pass
+        for event in pygame.event.get():
+            #quit the game when told to
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                #always call exit() when quitting to avoid an error
+                exit()
 
+            #if we don't quit the game lets see if any keys are pressed and act accordingly
+            keys = pygame.key.get_pressed()
+            for key in keys:
+                if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+                    self.direcX = -1
+                    self.direcY = 0
+                    self.turns[self.head.position[:]] = [self.direcX, self.direcY]
+                elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+                    self.direcX = 1
+                    self.direcY = 0
+                    self.turns[self.head.position[:]] = [self.direcX, self.direcY]
+                elif keys[pygame.K_UP] or keys[pygame.K_w]:
+                    self.direcX = 0
+                    self.direcY = -1
+                    self.turns[self.head.position[:]] = [self.direcX, self.direcY]
+                elif keys[pygame.K_DOWN] or keys[pygame.K_a]:
+                    self.direcX = 0
+                    self.direcY = 1
+                    self.turns[self.head.position[:]] = [self.direcX, self.direcY]
+
+            #for each cube in our snakes body
+            for i, cube in enumerate(self.body):
+                position = cube.position[:]
+                if position in self.turns:
+                    turn = self.turns[position]
+                    cube.move(turn[0], turn[1])
+                    if i == len(self.body) - 1:
+                        self.turns.pop(p)
+                else:
+                    if cube.direcX == -1 and cube.position[0] <= 0:
+                        cube.position = (c.rows - 1, c.position[1])
     def reset(self, position):
         pass
 

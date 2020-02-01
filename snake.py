@@ -98,24 +98,103 @@ class Snake(object):
                         self.turns.pop(p)
                 else:
                     if cube.direcX == -1 and cube.position[0] <= 0:
-                        cube.position = (c.rows - 1, c.position[1])
+                        cube.position = (cube.rows - 1, cube.position[1])
+                    elif cube.direcX == 1 and cube.position[0] >= cube.rows - 1:
+                        cube.position = (0, cube.position[1])
+                    elif cube.direcY == 1 and cube.position[1] > cube.rows -1:
+                        cube.position = (cube.position[0], 0)
+                    elif cube.direcY == -1 and cube.position[1] <= 0:
+                        cube.position = (cube.position[0], cube.rows -1)
+                    else:
+                        cube.move(cube.direcX, cube.direcY)
+                    
+    #use this to put the snake back and remove extra cubes when it dies
     def reset(self, position):
-        pass
+        self.head = Cube(position)
+        self.body = []
+        self.body.append(self.head)
+        self.addCube()
+        self.addCube()
+        self.addCube()
+        self.turns = {}
+        self.direcX = 0
+        self.direcY = 1
 
     def addCube(self):
-        pass
+        #get the last cube of the snake
+        tail = self.body[-1]
+        #get the tails direction
+        x, y = tail.direcX, tail.direcY
+
+        if x == 1 and y == 0:
+            self.body. append(Cube((tail.position[0] - 1, tail.position[1])))
+        elif x == -1 and y == 0:
+            self.body.append(Cube((tail.position[0] + 1, tail.position[1])))
+        elif x == 0 and d == 1:
+            self.body.append(Cube((tail.position[0], tail.position[1] -1)))
+        elif x == 0 and y == -1:
+            self.body.append(Cube((tail.position[0], tail.position[1] +1)))
+
+        #ensure the new cube added on the end is facing the right way
+        self.body[-1].direcX = x
+        self.body[-1].direcY = y
 
     def draw(self, surface):
-        pass
+        #for each cube in the snake draw it! and if its the head also draw the eyes
+        for i, cube in enumerate(self.body):
+            if i == 0:
+                cube.draw(surface, True)
+            else:
+                cube.draw(surface)
+
 
 def drawGrid(screenWidth, rows, surface):
-    pass
+    #get the spacing between cubes
+    spacing = screenWidth // rows
+    x = 0
+    y = 0
+
+    #draw the white lines on the board
+    for l in range(rows):
+        x += spacing
+        y+= spacing
+        pygame.draw.line(surface, (255, 255, 255), (x,0),(x,screenWidth))
+        pygame.draw.line(surface, (255, 255, 255), (0,y),(screenWidth,y))
+        y+= spacing
+
 
 def redrawWindow(surface):
-    pass
+    global rows, width, snake, snack
+    surface.fill((0,0,0))
+    snake.draw(surface)
+    snack.draw(surface)
+    drawGrid(width, rows, surface)
+    pygame.display.update()
 
 def createSnack(rows, item):
-    pass
+    #get the positions of the snakes body so we know where we can't place a snack
+    positions = item.body
+
+    #keep getting new random places for the snack until we get one that isn't on a spot where the snake is
+    while True:
+        x = random.randrange(rows)
+        y = random.randrange(rows)
+        if len(list(filter(lambda z: z.position == (x,y), position))) > 0:
+            continue
+        else:
+            break
+    return(x,y)
+
+
+def messageBox(subject, content):
+    root = tk.Tk()
+    root.attributes("-topmost", True)
+    root.withdraw()
+    messagebox.showinfo(subject, content)
+    try:
+        root.destroy()
+    except:
+        pass
 
 def main():
     pass

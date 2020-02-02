@@ -1,9 +1,9 @@
 import math
 import random
 import pygame
-import tkinter as tk
-from tkinter import messagebox
-BOARDSIZE = 500
+import tkinter
+import tkinter.font as font
+BOARDSIZE = 700
 ROWS = 20
 
 
@@ -203,16 +203,26 @@ def randomSnack(rows, item):
     return (x, y)
 
 
-def messageBox(subject, content):
-    root = tk.Tk()
-    root.attributes("-topmost", True)
-    root.withdraw()
-    messagebox.showinfo(subject, content)
-    try:
-        root.destroy()
-    except:
-        pass
+def messageBox(score):
+    mainWindow = tkinter.Tk()
+    mainWindow.title("You Lost!")
+    mainWindow.geometry("300x180")
+    scoreFrame = tkinter.Frame(mainWindow)
+    scoreFrame.pack()
+    buttonFrame = tkinter.Frame(mainWindow)
+    buttonFrame.pack(fill='both')
 
+    scoreLabel = tkinter.Label(scoreFrame, text = 'Score: ' + str(score),  anchor="w")
+    scoreLabel['font'] = font.Font(size = 30)
+    scoreLabel.pack()
+
+    replayButton = tkinter.Button(buttonFrame, text='Play Again!', command=mainWindow.destroy)
+    replayButton['font'] = font.Font(size = 30)
+    replayButton.pack()
+
+    scoreFrame.pack()
+    buttonFrame.pack()
+    tkinter.mainloop()
 
 def main():
     global width, rows, snake, snack
@@ -239,7 +249,7 @@ def main():
         for x in range(len(snake.body)):                        
             if snake.body[x].position in list(map(lambda z: z.position, snake.body[x + 1:])):
                 print('Score: ', len(snake.body))
-                messageBox('You Lost!', 'Play again...')
+                messageBox(len(snake.body))
                 snake.reset((10, 10))
                 break
 

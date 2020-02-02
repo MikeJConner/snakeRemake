@@ -3,13 +3,15 @@ import random
 import pygame
 import tkinter as tk
 from tkinter import messagebox
+BOARDSIZE = 1000
+
 
 #A class for each individual cube in the snake
 class Cube(object):
     #set rows and columns for game board
     rows = 20
     #set pixel width and height of game board
-    width= 500         
+    width = BOARDSIZE         
 
     #start at a set position facing right with a set color
     def __init__(self, start, xDirec=1, yDirec=0, color=(200, 200, 200)):
@@ -35,13 +37,36 @@ class Cube(object):
         #draw a rectangle on the correct surface with the right color, size, and coordinates, plus some offset to place it correctly
         pygame.draw.rect(surface, self.color, (i * dis + 1, j * dis + 1, dis - 2, dis - 2))
         #if this is the head of the snake, draw eyes on it
-        if eyes:    
-            centre = dis // 2
-            radius = 3
-            circleMiddle = (i * dis + centre - radius, j * dis + 8)
-            circleMiddle2 = (i * dis + dis - radius * 2, j * dis + 8)
-            pygame.draw.circle(surface, (0, 0, 0), circleMiddle, radius)
-            pygame.draw.circle(surface, (0, 0, 0), circleMiddle2, radius)
+        if eyes:
+            if self.xDirec == 1:
+                center = dis // 2
+                radius = 3
+                circleMiddle = (i * dis + center - radius, j * dis + 8)
+                circleMiddle2 = (i * dis + dis - radius * 2, j * dis + 8)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle, radius)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle2, radius)
+            if self.xDirec == -1:
+                center = dis // 2
+                radius = 3
+                circleMiddle = (i * dis + center + radius, j * dis + 8)
+                circleMiddle2 = (i * dis + dis - radius * 2 - 14, j * dis + 8)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle, radius)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle2, radius)
+            if self.yDirec == 1:
+                center = dis // 2
+                radius = 3
+                circleMiddle = (i * dis + center + radius + 3, j * dis + 8)
+                circleMiddle2 = (i * dis + center + radius + 3, j * dis + dis - radius * 2)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle, radius)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle2, radius)
+            if self.yDirec == -1:
+                center = dis // 2
+                radius = 3
+                circleMiddle = (i * dis + center - radius - 3, j * dis + 8)
+                circleMiddle2 = (i * dis + center - radius - 3, j * dis + dis - radius * 2)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle, radius)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle2, radius)
+                
 
 
 #take all the cube objects of the snake and put them together
@@ -196,7 +221,7 @@ def messageBox(subject, content):
 
 def main():
     global width, rows, snake, snack
-    width = 500
+    width = BOARDSIZE
     rows = 20
     win = pygame.display.set_mode((width, width))           
     snake = Snake((255, 0, 0), (10, 10))                        

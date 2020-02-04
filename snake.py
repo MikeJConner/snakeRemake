@@ -186,9 +186,6 @@ def redrawWindow(surface):
     snake.draw(surface)
     snack.draw(surface)
     drawGrid(width, rows, surface)
-
-    pygame.font.init()
-    myfont = pygame.font.SysFont('Comic Sans MS', 30)
     score0 = 'Score: ' + str(len(snake.body))
     textsurface = myfont.render(score0, False, (255,0,0))
     win.blit(textsurface,(0,BOARDSIZE))
@@ -232,13 +229,17 @@ def messageBox(score):
     tkinter.mainloop()
 
 def main():
-    global width, rows, snake, snack, win
+    global width, rows, snake, snack, win, textsurface, myfont
     width = BOARDSIZE
     rows = ROWS
-    win = pygame.display.set_mode((width, width + 60))           
+    win = pygame.display.set_mode((width, width + int(BOARDSIZE/13)))           
     snake = Snake((255, 0, 0), (10, 10))                        
     snack = Cube(randomSnack(rows, snake), color=(255, 0, 0))   
-    flag = True                                             
+    flag = True
+    pygame.font.init()
+    myfont = pygame.font.SysFont('Comic Sans MS', int(BOARDSIZE / 20))
+    score0 = 'Score: ' + str(len(snake.body))
+    textsurface = myfont.render(score0, False, (255,0,0))
 
     #keep time so the snake moves at a consistent rate
     clock = pygame.time.Clock()                             
